@@ -1,5 +1,5 @@
 import argparse
-from ascii_art.image import make_ascii_art
+from image import make_ascii_art
 
 
 def create_parser():
@@ -48,7 +48,7 @@ def create_parser():
         '-ch',
         help='Символы для asсii-art изображения',
         type=str,
-        default='#&@$%')
+        default='.,-=<>+?`*#')
 
     return parser
 

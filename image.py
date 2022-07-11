@@ -12,7 +12,8 @@ def make_ascii_art(path, out_path, is_console_output, ascii_art_width, ascii_art
 
 
 def to_ascii_art(image, chars):
-    chars = list(set(chars))
+    if len(set(chars)) != len(chars):
+        chars = list(set(chars))
     pixels = image.getdata()
 
     width, height = image.size
