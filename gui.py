@@ -205,27 +205,32 @@ class Window(QMainWindow):
         self.image_button = QPushButton(self)
         self.image_button.setText('Выбрать картинку')
         self.image_button.clicked.connect(self.show_select_image_dialog)
+        self.image_button.setFixedHeight(self.window_height // 10)
 
     def init_settings_button(self):
         self.settings_button = QPushButton(self)
         self.settings_button.setText('Сделать аски арт')
         self.settings_button.clicked.connect(self.show_select_settings_dialog)
         self.settings_button.hide()
+        self.settings_button.setFixedHeight(self.window_height // 10)
 
     def init_copy_button(self):
         self.copy_button = QPushButton(self)
         self.copy_button.setText('Скопировать')
         self.copy_button.clicked.connect(self.copy)
         self.copy_button.hide()
+        self.copy_button.setFixedHeight(self.window_height // 5)
 
     def init_write_file_button(self):
         self.write_file_button = QPushButton(self)
         self.write_file_button.setText('Сохранить')
         self.write_file_button.clicked.connect(self.write_file)
         self.write_file_button.hide()
+        self.write_file_button.setFixedHeight(self.window_height // 5)
 
     def init_grid_layout(self):
         self.layout = QGridLayout(self)
+        self.layout.setContentsMargins(self.window_height // 10, self.window_height // 10, self.window_height // 10, self.window_height // 10)
 
         widget = QWidget()
         self.setCentralWidget(widget)
