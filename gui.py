@@ -13,7 +13,8 @@ from PyQt5.QtWidgets import (
     QWidget,
     QLabel,
     QDialog,
-    QFormLayout
+    QFormLayout,
+    QScrollArea
 )
 
 from image import prepare_image_for_ascii_art, to_ascii_art
@@ -164,7 +165,11 @@ class Window(QMainWindow):
         self.copy_button.setHidden(False)
         self.write_file_button.setHidden(False)
 
-        self.layout.addWidget(self.ascii_art, 1, 3, 4, 3)
+        scroll = QScrollArea(self)
+        scroll.setWidget(self.ascii_art)
+        scroll.setWidgetResizable(True)
+
+        self.layout.addWidget(scroll, 1, 3, 4, 3)
         self.layout.addWidget(self.copy_button, 1, 6, 2, 1)
         self.layout.addWidget(self.write_file_button, 3, 6, 2, 1)
 

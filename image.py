@@ -14,13 +14,33 @@ def make_ascii_art(path, out_path, is_console_output, ascii_art_width, ascii_art
 def to_ascii_art(image, chars):
     if len(set(chars)) != len(chars):
         chars = list(set(chars))
-    pixels = image.getdata()
+    else:
+        chars = list(chars)
+
+    pixels = list(image.getdata())
 
     width, height = image.size
 
-    groups_count = int(255 / (len(chars) - 1))
+    different_pixels = list(set(pixels))
+    different_pixels.sort(key=lambda x: pixels.count(x[0]), reverse=True)
 
-    new_pixels = [chars[pixel[0] // groups_count] for pixel in pixels]
+    first = [different_pixels[j][0] for j in range(len(chars))]
+
+    for i in range(len(pixels)):
+        pixel = pixels[i][0]
+
+        if pixel not in first:
+            nearest_pixel = round_nearest_number(pixel, first)
+            pixels[i] = (nearest_pixel, nearest_pixel, nearest_pixel)
+
+    d = dict.fromkeys([different_pixels[j] for j in range(len(chars))])
+
+    k = 0
+    for key in d.keys():
+        d[key] = chars[k]
+        k += 1
+
+    new_pixels = [d[pixel] for pixel in pixels]
     new_pixels = ''.join(new_pixels)
 
     new_pixels_count = len(new_pixels)
@@ -28,6 +48,12 @@ def to_ascii_art(image, chars):
     ascii_image = "\n".join(ascii_image)
 
     return ascii_image
+
+
+def round_nearest_number(target, numbers):
+    differences = [abs(target - number) for number in numbers]
+    index_min_difference = differences.index(min(differences))
+    return numbers[index_min_difference]
 
 
 def write_ascii_art(ascii_art, path, out_path):
