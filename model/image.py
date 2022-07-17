@@ -7,7 +7,10 @@ class MyImage:
         self.image = Image.open(image_path).convert('RGB')
 
     def resize(self, new_width, new_height):
-        new_width, new_height = self.calculate_image_size(new_width, new_height)
+        new_width, new_height = self.calculate_image_size(
+            new_width,
+            new_height
+        )
         self.image = self.image.resize((new_width, new_height))
 
     def calculate_image_size(self, new_width, new_height):

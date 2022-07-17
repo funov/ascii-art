@@ -31,12 +31,13 @@ class ASCIIArtSettingsDialog(QDialog):
         self.setGeometry(x, y, width, height)
 
         self.setWindowFlag(Qt.WindowContextHelpButtonHint, False)
-        self.setWindowTitle('Параметры ASCII ART')
+        self.setWindowTitle('Параметры ASCII Art')
         self.setModal(True)
 
         self.settings_description = QLabel()
         description = 'Если ввести ширину или высоту (что-то одно),' \
-                      ' то второе вычислится в соответсвиии с пропорциями'
+                      ' то второе вычислится в соответсвиии с ' \
+                      'соотношением сторон исходного изображения'
         self.settings_description.setText(description)
 
         self.symbols = QLineEdit()
@@ -62,17 +63,18 @@ class ASCIIArtSettingsDialog(QDialog):
         return form
 
     def apply_settings(self):
-        problem, problem_text = None, None
-
         if len(self.symbols.text().rstrip()) == 0:
             problem = 'Некорректные символы'
-            problem_text = 'ASCII ART из одних пробелов - это печально, выберите другие символы'
+            problem_text = 'ASCII Art из одних пробелов - ' \
+                           'это печально, выберите другие символы'
         elif not str.isdigit(self.width.text()) and self.width.text() != '':
             problem = 'Некорректная ширина'
-            problem_text = 'Ширина ASCII ART должна быть целым положительным числом'
+            problem_text = 'Ширина ASCII Art должна быть ' \
+                           'целым положительным числом'
         elif not str.isdigit(self.height.text()) and self.height.text() != '':
             problem = 'Некорректная высота'
-            problem_text = 'Высота ASCII ART должна быть целым положительным числом'
+            problem_text = 'Высота ASCII Art должна быть ' \
+                           'целым положительным числом'
         elif self.width.text() == '' and self.height.text() == '':
             problem = 'Некорректные настройки'
             problem_text = 'Введите высоту или ширину (хотя бы одно)'
@@ -96,7 +98,7 @@ class Window(QMainWindow):
         super(Window, self).__init__()
         self.app = app
 
-        self.setWindowTitle('ASCII ART')
+        self.setWindowTitle('ASCII Art')
         self.init_center_geometry()
 
         self.image_button = self.configure_image_button()
@@ -121,9 +123,12 @@ class Window(QMainWindow):
 
         image = QImage(self.image_path)
         pixmap = QPixmap.fromImage(image)
+
+        width = self.size().width()
+
         pixmap = pixmap.scaled(
-            self.size().width() // 3,
-            int((pixmap.height() / pixmap.width()) * (self.size().width() // 3))
+            width // 3,
+            int((pixmap.height() / pixmap.width()) * (width // 3))
         )
 
         if self.image_label is not None:
@@ -198,7 +203,7 @@ class Window(QMainWindow):
         QMessageBox.question(
             self,
             'Информация',
-            'ASCII ART скопирован в буфер обмена',
+            'ASCII Art скопирован в буфер обмена',
             QMessageBox.Ok
         )
 
@@ -209,7 +214,7 @@ class Window(QMainWindow):
         QMessageBox.question(
             self,
             'Информация',
-            'ASCII ART создан',
+            'ASCII Art создан',
             QMessageBox.Ok
         )
 
@@ -239,7 +244,7 @@ class Window(QMainWindow):
 
     def configure_settings_button(self):
         settings_button = QPushButton(self)
-        settings_button.setText('Сделать ASCII ART')
+        settings_button.setText('Сделать ASCII Art')
         settings_button.clicked.connect(self.show_select_settings_dialog)
         settings_button.hide()
         settings_button.setFixedHeight(self.size().height() // 10)
