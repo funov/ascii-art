@@ -14,7 +14,7 @@ def make_ascii_art(
     image.resize(ascii_art_width, ascii_art_height)
     image.to_gray_scale()
 
-    ascii_art = ASCIIArtConverter.to_ascii_art(image.image, ascii_chars)
+    ascii_art = ASCIIArtConverter.to_str_ascii_art(image.image, ascii_chars)
 
     if is_console_output:
         print(ascii_art)

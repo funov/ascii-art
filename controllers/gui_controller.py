@@ -8,7 +8,7 @@ def make_ascii_art(path, ascii_art_width, ascii_art_height, ascii_chars):
     image.resize(ascii_art_width, ascii_art_height)
     image.to_gray_scale()
 
-    ascii_art = ASCIIArtConverter.to_ascii_art(image.image, ascii_chars)
+    ascii_art = ASCIIArtConverter.to_list_ascii_art(image.image, ascii_chars)
 
     return ascii_art
 
