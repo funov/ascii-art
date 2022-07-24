@@ -24,30 +24,44 @@ class ASCIIArtConverter:
     @staticmethod
     def to_str_ascii_art(grayscale_image, chars):
         width, height = grayscale_image.size
-        ascii_chars = ASCIIArtConverter.get_ascii_chars(grayscale_image, chars)
+        ascii_chars = ASCIIArtConverter.get_ascii_chars(
+            grayscale_image,
+            chars
+        )
 
         ascii_chars_str = ''.join(ascii_chars)
 
         chars_len = len(ascii_chars_str)
-        ascii_image = [ascii_chars_str[i:i + width] for i in range(0, chars_len, width)]
+        ascii_image = [
+            ascii_chars_str[i:i + width] for i in range(0, chars_len, width)
+        ]
         ascii_image = "\n".join(ascii_image)
 
         return ascii_image
 
     @staticmethod
     def to_list_ascii_art(grayscale_image, chars):
-        width, height = grayscale_image.size
-        ascii_chars = ASCIIArtConverter.get_ascii_chars(grayscale_image, chars)
+        w, h = grayscale_image.size
+        ascii_chars = ASCIIArtConverter.get_ascii_chars(
+            grayscale_image,
+            chars
+        )
 
-        ascii_art_list = [ascii_chars[i:i + width] for i in range(0, len(ascii_chars), width)]
+        ascii_art_list = [
+            ascii_chars[i:i + w] for i in range(0, len(ascii_chars), w)
+        ]
 
         return ascii_art_list
 
     @staticmethod
-    def increase_contrast(pixels, color_count, different_pixels):
+    def increase_contrast(pixels, color_count, diff_pixels):
         pixels = pixels.copy()
 
-        first = [different_pixels[j][0] for j in range(min(color_count, len(different_pixels)))]
+        min_count = min(color_count, len(diff_pixels))
+
+        first = [
+            diff_pixels[j][0] for j in range(min_count)
+        ]
 
         for i in range(len(pixels)):
             pixel = pixels[i][0]
@@ -61,9 +75,9 @@ class ASCIIArtConverter:
         return pixels
 
     @staticmethod
-    def get_color_to_symbol_dict(chars, different_pixels):
+    def get_color_to_symbol_dict(chars, diff_pixels):
         color_to_symbol = dict.fromkeys(
-            [different_pixels[j] for j in range(min(len(chars), len(different_pixels)))]
+            [diff_pixels[j] for j in range(min(len(chars), len(diff_pixels)))]
         )
 
         k = 0
