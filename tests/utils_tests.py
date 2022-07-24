@@ -5,22 +5,30 @@ from model.utils import write_ascii_art
 
 class UtilsTests(unittest.TestCase):
     def setUp(self):
-        self.expected_write_data_with_out_folder_win = ['###///###\n///###///']
+        self.expected_write_data_with_out_folder_win = [
+            '###///###\n///###///'
+        ]
         self.expected_folder_info_with_out_folder_win = [
             ('C:\\Users\\User\\folder\\image.txt', 'w')
         ]
 
-        self.expected_write_data_with_out_folder_not_win = ['###///###\n///###///']
+        self.expected_write_data_with_out_folder_not_win = [
+            '###///###\n///###///'
+        ]
         self.expected_folder_info_with_out_folder_not_win = [
             ('C:/Users/User/folder/image.txt', 'w')
         ]
 
-        self.expected_write_data_without_out_folder_win = ['###///###\n///###///']
+        self.expected_write_data_without_out_folder_win = [
+            '###///###\n///###///'
+        ]
         self.expected_folder_info_without_out_folder_win = [
             ('C:\\Users\\User\\image.txt', 'w')
         ]
 
-        self.expected_write_data_without_out_folder_not_win = ['###///###\n///###///']
+        self.expected_write_data_without_out_folder_not_win = [
+            '###///###\n///###///'
+        ]
         self.expected_folder_info_without_out_folder_not_win = [
             ('C:/Users/User/image.txt', 'w')
         ]
@@ -37,8 +45,14 @@ class UtilsTests(unittest.TestCase):
 
         folder_info, write_data = UtilsTests.get_info(m)
 
-        self.assertEqual(self.expected_folder_info_with_out_folder_win, folder_info)
-        self.assertEqual(self.expected_write_data_with_out_folder_win, write_data)
+        self.assertEqual(
+            self.expected_folder_info_with_out_folder_win,
+            folder_info
+        )
+        self.assertEqual(
+            self.expected_write_data_with_out_folder_win,
+            write_data
+        )
 
     def test_write_with_out_folder_not_win(self):
         m = mock_open()
@@ -52,8 +66,14 @@ class UtilsTests(unittest.TestCase):
 
         folder_info, write_data = UtilsTests.get_info(m)
 
-        self.assertEqual(self.expected_folder_info_with_out_folder_not_win, folder_info)
-        self.assertEqual(self.expected_write_data_with_out_folder_not_win, write_data)
+        self.assertEqual(
+            self.expected_folder_info_with_out_folder_not_win,
+            folder_info
+        )
+        self.assertEqual(
+            self.expected_write_data_with_out_folder_not_win,
+            write_data
+        )
 
     def test_write_without_out_folder_win(self):
         m = mock_open()
@@ -67,8 +87,14 @@ class UtilsTests(unittest.TestCase):
 
         folder_info, write_data = UtilsTests.get_info(m)
 
-        self.assertEqual(self.expected_folder_info_without_out_folder_win, folder_info)
-        self.assertEqual(self.expected_write_data_without_out_folder_win, write_data)
+        self.assertEqual(
+            self.expected_folder_info_without_out_folder_win,
+            folder_info
+        )
+        self.assertEqual(
+            self.expected_write_data_without_out_folder_win,
+            write_data
+        )
 
     def test_write_without_out_folder_not_win(self):
         m = mock_open()
@@ -82,8 +108,14 @@ class UtilsTests(unittest.TestCase):
 
         folder_info, write_data = UtilsTests.get_info(m)
 
-        self.assertEqual(self.expected_folder_info_without_out_folder_not_win, folder_info)
-        self.assertEqual(self.expected_write_data_without_out_folder_not_win, write_data)
+        self.assertEqual(
+            self.expected_folder_info_without_out_folder_not_win,
+            folder_info
+        )
+        self.assertEqual(
+            self.expected_write_data_without_out_folder_not_win,
+            write_data
+        )
 
     @staticmethod
     def get_info(m):
