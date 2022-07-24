@@ -4,15 +4,20 @@ from PyQt5.QtWidgets import QLabel
 
 
 class PaintLabel(QLabel):
-    def __init__(self, canvas, ascii_art, width_coefficient, height_coefficient, pixmap_coefficient):
+    def __init__(self,
+                 canvas,
+                 ascii_art,
+                 width_coef,
+                 height_coef,
+                 pixmap_coef):
         super(PaintLabel, self).__init__()
-        self.width_coefficient = width_coefficient
-        self.height_coefficient = height_coefficient
+        self.width_coef = width_coef
+        self.height_coef = height_coef
         self.setPixmap(canvas)
 
         self.pixels = ascii_art
-        self.pixels_width = int(canvas.width() / width_coefficient / pixmap_coefficient)
-        self.pixels_height = int(canvas.height() / height_coefficient / pixmap_coefficient)
+        self.pixels_width = int(canvas.width() / width_coef / pixmap_coef)
+        self.pixels_height = int(canvas.height() / height_coef / pixmap_coef)
 
         self.is_rubber = False
         self.is_pencil = False
@@ -26,42 +31,53 @@ class PaintLabel(QLabel):
 
         for w in range(1, self.pixels_width + 1):
             for h in range(1, self.pixels_height + 1):
-                painter.drawText(w * self.width_coefficient, h * self.height_coefficient, self.pixels[h - 1][w - 1])
+                painter.drawText(
+                    w * self.width_coef,
+                    h * self.height_coef,
+                    self.pixels[h - 1][w - 1]
+                )
 
         painter.end()
         self.update()
 
     def mouseMoveEvent(self, e):
         if self.is_pencil or self.is_rubber:
-            self.draw(e)
+            self.edit_ascii_art(e)
 
-    def draw(self, e):
+    def edit_ascii_art(self, e):
         painter = self.get_painter()
 
         pen = QPen(Qt.white)
         painter.setPen(pen)
 
-        a = e.x() - e.x() % self.width_coefficient
-        b = e.y() - e.y() % self.height_coefficient
-        c = e.x() // self.width_coefficient
-        d = e.y() // self.height_coefficient
+        x_pixel = e.x() - e.x() % self.width_coef
+        y_pixel = e.y() - e.y() % self.height_coef
+        column_ind = e.x() // self.width_coef
+        row_ind = e.y() // self.height_coef
 
-        if not 0 < c < self.pixels_width + 1 or not 0 < d < self.pixels_height + 1:
+        is_column_correct = not 0 < column_ind < self.pixels_width + 1
+        is_row_correct = not 0 < row_ind < self.pixels_height + 1
+
+        if is_column_correct or is_row_correct:
             return
 
-        if self.pixels[d - 1][c - 1] != ' ':
+        if self.pixels[row_ind - 1][column_ind - 1] != ' ':
             for i in range(10):
-                painter.drawText(a, b, self.pixels[d - 1][c - 1])
+                painter.drawText(
+                    x_pixel,
+                    y_pixel,
+                    self.pixels[row_ind - 1][column_ind - 1]
+                )
 
-        self.pixels[d - 1][c - 1] = ' '
+        self.pixels[row_ind - 1][column_ind - 1] = ' '
 
         if self.is_pencil:
             pen = QPen(Qt.black)
             painter.setPen(pen)
 
-            painter.drawText(a, b, self.pencil_char)
+            painter.drawText(x_pixel, y_pixel, self.pencil_char)
 
-            self.pixels[d - 1][c - 1] = self.pencil_char
+            self.pixels[row_ind - 1][column_ind - 1] = self.pencil_char
 
         painter.end()
         self.update()

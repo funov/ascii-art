@@ -27,12 +27,36 @@ class Window(QMainWindow):
         self.setWindowTitle('ASCII Art')
         self.init_center_geometry()
 
-        self.image_button = self.configure_button('Выбрать картинку', self.show_image_selection_dialog, False)
-        self.settings_button = self.configure_button('Сделать ASCII Art', self.show_select_settings_dialog, True)
-        self.copy_button = self.configure_button('Скопировать', self.copy_ascii_art_to_clipboard, True)
-        self.write_file_button = self.configure_button('Сохранить', self.write_ascii_art_to_file, True)
-        self.pencil_button = self.configure_button('Карандаш', self.use_pencil, True)
-        self.rubber_button = self.configure_button('Резинка', self.use_rubber, True)
+        self.image_button = self.configure_button(
+            'Выбрать картинку',
+            self.show_image_selection_dialog,
+            False
+        )
+        self.settings_button = self.configure_button(
+            'Сделать ASCII Art',
+            self.show_select_settings_dialog,
+            True
+        )
+        self.copy_button = self.configure_button(
+            'Скопировать',
+            self.copy_ascii_art_to_clipboard,
+            True
+        )
+        self.write_file_button = self.configure_button(
+            'Сохранить',
+            self.write_ascii_art_to_file,
+            True
+        )
+        self.pencil_button = self.configure_button(
+            'Карандаш',
+            self.use_pencil,
+            True
+        )
+        self.rubber_button = self.configure_button(
+            'Резинка',
+            self.use_rubber,
+            True
+        )
 
         self.grid_layout = self.configure_grid_layout()
 
@@ -75,19 +99,13 @@ class Window(QMainWindow):
         self.settings_button.setHidden(False)
 
     def show_select_settings_dialog(self):
-        screen_rect = self.screen().geometry()
-
-        window_height = self.size().height() // 3
-        window_width = self.size().width() // 3
-
-        screen_center_x = screen_rect.width() // 2 - window_width // 2
-        screen_center_y = screen_rect.height() // 2 - window_height // 2
+        pos_x, pos_y, window_w, window_h = self.get_dialog_params()
 
         self.settings_dialog = ASCIIArtSettingsDialog(
-            screen_center_x,
-            screen_center_y,
-            window_width,
-            window_height,
+            pos_x,
+            pos_y,
+            window_w,
+            window_h,
             self.draw_ascii_art
         )
 
@@ -104,18 +122,24 @@ class Window(QMainWindow):
             self.settings_dialog.symbols_text
         )
 
-        width_coefficient = 12
-        height_coefficient = width_coefficient * 2
+        w_coefficient = 12
+        h_coefficient = w_coefficient * 2
         pixmap_coefficient = 1.1
 
         canvas = QPixmap(
-            int(len(ascii_art_list[0]) * width_coefficient * pixmap_coefficient),
-            int(len(ascii_art_list) * height_coefficient * pixmap_coefficient)
+            int(len(ascii_art_list[0]) * w_coefficient * pixmap_coefficient),
+            int(len(ascii_art_list) * h_coefficient * pixmap_coefficient)
         )
 
         canvas.fill(Qt.white)
 
-        self.ascii_art = PaintLabel(canvas, ascii_art_list, width_coefficient, height_coefficient, pixmap_coefficient)
+        self.ascii_art = PaintLabel(
+            canvas,
+            ascii_art_list,
+            w_coefficient,
+            h_coefficient,
+            pixmap_coefficient
+        )
 
         self.copy_button.setHidden(False)
         self.write_file_button.setHidden(False)
@@ -134,8 +158,8 @@ class Window(QMainWindow):
 
     def copy_ascii_art_to_clipboard(self):
         clipboard = self.app.clipboard()
-        ascii_art_text = '\n'.join([''.join(x) for x in self.ascii_art.pixels])
-        clipboard.setText(ascii_art_text)
+        ascii_text = '\n'.join([''.join(x) for x in self.ascii_art.pixels])
+        clipboard.setText(ascii_text)
 
         QMessageBox.question(
             self,
@@ -148,23 +172,28 @@ class Window(QMainWindow):
         self.ascii_art.is_rubber = False
         self.ascii_art.is_pencil = True
 
-        screen_rect = self.screen().geometry()
-
-        window_height = self.size().height() // 10
-        window_width = self.size().width() // 10
-
-        screen_center_x = screen_rect.width() // 2 - window_width // 2
-        screen_center_y = screen_rect.height() // 2 - window_height // 2
+        pos_x, pos_y, window_w, window_h = self.get_dialog_params()
 
         self.paint_char_dialog = PaintCharDialog(
-            screen_center_x,
-            screen_center_y,
-            window_width,
-            window_height,
+            pos_x,
+            pos_y,
+            window_w,
+            window_h,
             self.apply_char
         )
 
         self.paint_char_dialog.show()
+
+    def get_dialog_params(self):
+        screen_rect = self.screen().geometry()
+
+        window_height = self.size().height() // 2
+        window_width = self.size().width() // 2
+
+        screen_center_x = screen_rect.width() // 2 - window_width // 2
+        screen_center_y = screen_rect.height() // 2 - window_height // 2
+
+        return screen_center_x, screen_center_y, window_width, window_height
 
     def apply_char(self):
         self.ascii_art.pencil_char = self.paint_char_dialog.paint_char
@@ -175,7 +204,8 @@ class Window(QMainWindow):
 
     def write_ascii_art_to_file(self):
         file_path = QFileDialog.getExistingDirectory(self)
-        ascii_art_text = '\n'.join([''.join(x) for x in self.ascii_art.pixels])
+        ascii_lines = [''.join(x) for x in self.ascii_art.pixels]
+        ascii_art_text = '\n'.join(ascii_lines)
         write(ascii_art_text, self.image_path, file_path)
 
         QMessageBox.question(
