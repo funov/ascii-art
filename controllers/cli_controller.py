@@ -10,7 +10,12 @@ def make_ascii_art(
         ascii_art_width,
         ascii_art_height,
         ascii_chars):
-    image = MyImage(path)
+    try:
+        image = MyImage(path)
+    except OSError:
+        print('Некорректный файловый путь')
+        return
+
     image.resize(ascii_art_width, ascii_art_height)
     image.to_gray_scale()
 

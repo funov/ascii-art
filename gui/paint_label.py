@@ -17,7 +17,7 @@ class PaintLabel(QLabel):
         self.is_rubber = False
         self.is_pencil = False
 
-        self.pencil_char = '@'
+        self.pencil_char = None
 
         self.draw_ascii_art()
 
