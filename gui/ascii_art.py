@@ -111,11 +111,9 @@ class Window(QMainWindow):
 
         self.settings_dialog.show()
 
-    def draw_ascii_art(self):
-        if self.ascii_art is not None:
-            self.grid_layout.removeWidget(self.ascii_art)
-
-        ascii_art_list = make_ascii_art(
+    async def draw_ascii_art(self):
+        # TODO Очень долго
+        ascii_art_list = await make_ascii_art(
             self.image_path,
             self.settings_dialog.width_text,
             self.settings_dialog.height_text,
@@ -140,6 +138,9 @@ class Window(QMainWindow):
             h_coefficient,
             pixmap_coefficient
         )
+
+        # TODO Не так долго
+        self.ascii_art.draw_ascii_art()
 
         self.copy_button.setHidden(False)
         self.write_file_button.setHidden(False)
@@ -204,6 +205,10 @@ class Window(QMainWindow):
 
     def write_ascii_art_to_file(self):
         file_path = QFileDialog.getExistingDirectory(self)
+
+        if file_path == '':
+            return
+
         ascii_lines = [''.join(x) for x in self.ascii_art.pixels]
         ascii_art_text = '\n'.join(ascii_lines)
         write(ascii_art_text, self.image_path, file_path)

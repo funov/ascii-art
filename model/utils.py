@@ -1,4 +1,5 @@
 import os
+from time import time
 
 
 def write_ascii_art(ascii_art, image_path, out_folder_path):
@@ -9,7 +10,9 @@ def write_ascii_art(ascii_art, image_path, out_folder_path):
     else:
         image_name = image_path.split(other_sep)[-1]
 
-    file_name = image_name[:image_name.rfind('.')] + '.txt'
+    current_time = '_' + str(time()).replace('.', '_')
+
+    file_name = image_name[:image_name.rfind('.')] + current_time + '.txt'
 
     if out_folder_path is None:
         out_folder_path = image_path.replace(image_name, file_name)

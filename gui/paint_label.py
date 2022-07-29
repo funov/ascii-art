@@ -24,8 +24,6 @@ class PaintLabel(QLabel):
 
         self.pencil_char = None
 
-        self.draw_ascii_art()
-
     def draw_ascii_art(self):
         painter = self.get_painter()
 
