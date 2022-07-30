@@ -111,9 +111,9 @@ class Window(QMainWindow):
 
         self.settings_dialog.show()
 
-    async def draw_ascii_art(self):
+    def draw_ascii_art(self):
         # TODO Очень долго
-        ascii_art_list = await make_ascii_art(
+        ascii_art_list = make_ascii_art(
             self.image_path,
             self.settings_dialog.width_text,
             self.settings_dialog.height_text,
