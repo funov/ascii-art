@@ -1,10 +1,11 @@
 import sys
-from controllers.gui_controller import make_ascii_art, write
+from controllers.gui_controller import write
 from ascii_art_settings_dialog import ASCIIArtSettingsDialog
 from get_paint_char_dialog import PaintCharDialog
 from paint_label import PaintLabel
+from ascii_workers import MakeASCIIArtWorker, DrawASCIIArtWorker
 
-from PyQt5.QtCore import Qt, QThreadPool, QRunnable, pyqtSlot, QObject, pyqtSignal
+from PyQt5.QtCore import Qt, QThreadPool
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import (
     QMainWindow,
@@ -112,9 +113,6 @@ class Window(QMainWindow):
 
         self.settings_dialog.show()
 
-    def draw_ascii_art_trigger(self, ascii_art_list):
-        self.draw_ascii_art(ascii_art_list)
-
     def get_ascii_art(self):
         self.threadpool = QThreadPool()
 
@@ -128,6 +126,9 @@ class Window(QMainWindow):
         worker.signals.result.connect(self.draw_ascii_art_trigger)
 
         self.threadpool.start(worker)
+
+    def draw_ascii_art_trigger(self, ascii_art_list):
+        self.draw_ascii_art(ascii_art_list)
 
     def draw_ascii_art(self, ascii_art_list):
         w_coefficient = 12
@@ -149,8 +150,16 @@ class Window(QMainWindow):
             pixmap_coefficient
         )
 
-        self.ascii_art.draw_ascii_art()
+        self.start_ascii_drawing()
 
+    def start_ascii_drawing(self):
+        worker = DrawASCIIArtWorker(self)
+
+        worker.signals.finished.connect(self.show_buttons_after_ascii_drawing)
+
+        self.threadpool.start(worker)
+
+    def show_buttons_after_ascii_drawing(self):
         self.copy_button.setHidden(False)
         self.write_file_button.setHidden(False)
         self.pencil_button.setHidden(False)
@@ -273,32 +282,6 @@ class Window(QMainWindow):
         self.centralWidget().setLayout(grid_layout)
 
         return grid_layout
-
-
-class MakeASCIIArtWorker(QRunnable):
-    def __init__(self, image_path, width_text, height_text, symbols_text):
-        super(MakeASCIIArtWorker, self).__init__()
-        self.image_path = image_path
-        self.width_text = width_text
-        self.height_text = height_text
-        self.symbols_text = symbols_text
-
-        self.signals = WorkerSignals()
-
-    @pyqtSlot()
-    def run(self):
-        ascii_art = make_ascii_art(
-            self.image_path,
-            self.width_text,
-            self.height_text,
-            self.symbols_text
-        )
-
-        self.signals.result.emit(ascii_art)
-
-
-class WorkerSignals(QObject):
-    result = pyqtSignal(object)
 
 
 if __name__ == '__main__':
