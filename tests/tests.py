@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch, mock_open
 from PIL import Image
 import numpy as np
+from time import time
 
 from model.ascii_art_converter import ASCIIArtConverter
 from model.utils import write_ascii_art
@@ -13,28 +14,28 @@ class UtilsTests(unittest.TestCase):
             '###///###\n///###///'
         ]
         self.expected_folder_info_with_out_folder_win = [
-            ('C:\\Users\\User\\folder\\image.txt', 'w')
+            ('C:\\Users\\User\\folder\\image', 'w')
         ]
 
         self.expected_write_data_with_out_folder_not_win = [
             '###///###\n///###///'
         ]
         self.expected_folder_info_with_out_folder_not_win = [
-            ('C:/Users/User/folder/image.txt', 'w')
+            ('C:/Users/User/folder/image', 'w')
         ]
 
         self.expected_write_data_without_out_folder_win = [
             '###///###\n///###///'
         ]
         self.expected_folder_info_without_out_folder_win = [
-            ('C:\\Users\\User\\image.txt', 'w')
+            ('C:\\Users\\User\\image', 'w')
         ]
 
         self.expected_write_data_without_out_folder_not_win = [
             '###///###\n///###///'
         ]
         self.expected_folder_info_without_out_folder_not_win = [
-            ('C:/Users/User/image.txt', 'w')
+            ('C:/Users/User/image', 'w')
         ]
 
     def test_write_with_out_folder_win(self):
@@ -47,15 +48,13 @@ class UtilsTests(unittest.TestCase):
                 'C:\\Users\\User\\folder'
             )
 
-        folder_info, write_data = UtilsTests.get_info(m)
+            expected_time = str(time()).split('.')[0]
 
-        self.assertEqual(
+        self.assert_folders(
             self.expected_folder_info_with_out_folder_win,
-            folder_info
-        )
-        self.assertEqual(
             self.expected_write_data_with_out_folder_win,
-            write_data
+            expected_time,
+            UtilsTests.get_info(m)
         )
 
     def test_write_with_out_folder_not_win(self):
@@ -68,15 +67,13 @@ class UtilsTests(unittest.TestCase):
                 'C:/Users/User/folder'
             )
 
-        folder_info, write_data = UtilsTests.get_info(m)
+            expected_time = str(time()).split('.')[0]
 
-        self.assertEqual(
+        self.assert_folders(
             self.expected_folder_info_with_out_folder_not_win,
-            folder_info
-        )
-        self.assertEqual(
             self.expected_write_data_with_out_folder_not_win,
-            write_data
+            expected_time,
+            UtilsTests.get_info(m)
         )
 
     def test_write_without_out_folder_win(self):
@@ -89,15 +86,13 @@ class UtilsTests(unittest.TestCase):
                 None
             )
 
-        folder_info, write_data = UtilsTests.get_info(m)
+            expected_time = str(time()).split('.')[0]
 
-        self.assertEqual(
+        self.assert_folders(
             self.expected_folder_info_without_out_folder_win,
-            folder_info
-        )
-        self.assertEqual(
             self.expected_write_data_without_out_folder_win,
-            write_data
+            expected_time,
+            UtilsTests.get_info(m)
         )
 
     def test_write_without_out_folder_not_win(self):
@@ -110,16 +105,49 @@ class UtilsTests(unittest.TestCase):
                 None
             )
 
-        folder_info, write_data = UtilsTests.get_info(m)
+            expected_time = str(time()).split('.')[0]
+
+        self.assert_folders(
+            self.expected_folder_info_without_out_folder_not_win,
+            self.expected_write_data_without_out_folder_not_win,
+            expected_time,
+            UtilsTests.get_info(m)
+        )
+
+    def assert_folders(self,
+                       expected_folder_info,
+                       expected_write_data,
+                       expected_time,
+                       mock_info):
+        folder_info, write_data = mock_info
+
+        expected_folder_info = UtilsTests.update_expected_folder(
+            expected_folder_info,
+            expected_time
+        )
+
+        folder_info_split = folder_info[0][0].split('_')
+        folder_info[0] = (
+            f'{folder_info_split[0]}_{folder_info_split[1]}.txt',
+            folder_info[0][1]
+        )
 
         self.assertEqual(
-            self.expected_folder_info_without_out_folder_not_win,
+            expected_folder_info,
             folder_info
         )
         self.assertEqual(
-            self.expected_write_data_without_out_folder_not_win,
+            expected_write_data,
             write_data
         )
+
+    @staticmethod
+    def update_expected_folder(expected_folder, expected_time):
+        folder = expected_folder[0][0]
+        mode = expected_folder[0][1]
+        expected_folder[0] = (f'{folder}_{expected_time}.txt', mode)
+
+        return expected_folder
 
     @staticmethod
     def get_info(m):
