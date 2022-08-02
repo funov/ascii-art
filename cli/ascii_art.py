@@ -67,7 +67,8 @@ def main():
             cmd_commands.chars
         )
     except RuntimeError:
-        print('Что-то пошло не так, напишите разработчикам')
+        print('Что-то пошло не так, напишите '
+              'разработчикам (дополнительная информация в README)')
 
 
 if __name__ == '__main__':
