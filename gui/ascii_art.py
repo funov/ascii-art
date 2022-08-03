@@ -131,8 +131,8 @@ class Window(QMainWindow):
         self.draw_ascii_art(ascii_art_list)
 
     def draw_ascii_art(self, ascii_art_list):
-        w_coefficient = 12
         font_size = 10
+        w_coefficient = int(font_size / 1.4)
 
         h_coefficient = w_coefficient * 2
         pixmap_coefficient = 1.1
