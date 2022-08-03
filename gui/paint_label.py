@@ -52,8 +52,8 @@ class PaintLabel(QLabel):
 
         x_pixel = e.x() - e.x() % self.width_coef
         y_pixel = e.y() - e.y() % self.height_coef
-        column_ind = e.x() // self.width_coef
-        row_ind = e.y() // self.height_coef
+        column_ind = int(e.x() / self.width_coef)
+        row_ind = int(e.y() / self.height_coef)
 
         is_column_correct = not 0 < column_ind < self.pixels_width + 1
         is_row_correct = not 0 < row_ind < self.pixels_height + 1

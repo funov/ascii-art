@@ -145,7 +145,7 @@ class Window(QMainWindow):
         self.draw_ascii_art(ascii_art_list)
 
     def draw_ascii_art(self, ascii_art_list, font_size=10):
-        w_coefficient = int(font_size / 1.4)
+        w_coefficient = font_size / 1.4
 
         h_coefficient = w_coefficient * 2
         pixmap_coefficient = 1.1
@@ -311,7 +311,7 @@ class Window(QMainWindow):
         self.draw_ascii_art(self.ascii_art_list, self.font_size)
 
     def do_zoom_out(self):
-        if self.font_size == 2:
+        if self.font_size == 1:
             return
 
         self.font_size -= 1
