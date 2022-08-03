@@ -58,6 +58,16 @@ class Window(QMainWindow):
             self.use_rubber,
             True
         )
+        self.zoom_in_button = self.configure_button(
+            'Увеличить',
+            self.do_zoom_in,
+            True
+        )
+        self.zoom_out_button = self.configure_button(
+            'Уменьшить',
+            self.do_zoom_out,
+            True
+        )
 
         self.grid_layout = self.configure_grid_layout()
 
@@ -67,6 +77,8 @@ class Window(QMainWindow):
         self.image_label = None
         self.image_path = None
         self.threadpool = None
+        self.ascii_art_list = None
+        self.font_size = None
 
     def show_image_selection_dialog(self):
         image_path = QFileDialog.getOpenFileName(
@@ -128,10 +140,11 @@ class Window(QMainWindow):
         self.threadpool.start(worker)
 
     def draw_ascii_art_trigger(self, ascii_art_list):
+        self.ascii_art_list = ascii_art_list
+        self.font_size = 10
         self.draw_ascii_art(ascii_art_list)
 
-    def draw_ascii_art(self, ascii_art_list):
-        font_size = 10
+    def draw_ascii_art(self, ascii_art_list, font_size=10):
         w_coefficient = int(font_size / 1.4)
 
         h_coefficient = w_coefficient * 2
@@ -167,6 +180,8 @@ class Window(QMainWindow):
         self.write_file_button.setHidden(False)
         self.pencil_button.setHidden(False)
         self.rubber_button.setHidden(False)
+        self.zoom_in_button.setHidden(False)
+        self.zoom_out_button.setHidden(False)
 
         scroll = QScrollArea(self)
         scroll.setWidget(self.ascii_art)
@@ -177,6 +192,8 @@ class Window(QMainWindow):
         self.grid_layout.addWidget(self.write_file_button, 2, 6, 1, 1)
         self.grid_layout.addWidget(self.pencil_button, 3, 6, 1, 1)
         self.grid_layout.addWidget(self.rubber_button, 4, 6, 1, 1)
+        self.grid_layout.addWidget(self.zoom_in_button, 5, 3, 1, 1)
+        self.grid_layout.addWidget(self.zoom_out_button, 5, 4, 1, 1)
 
     def copy_ascii_art_to_clipboard(self):
         clipboard = self.app.clipboard()
@@ -285,6 +302,20 @@ class Window(QMainWindow):
         self.centralWidget().setLayout(grid_layout)
 
         return grid_layout
+
+    def do_zoom_in(self):
+        if self.font_size == 40:
+            return
+
+        self.font_size += 1
+        self.draw_ascii_art(self.ascii_art_list, self.font_size)
+
+    def do_zoom_out(self):
+        if self.font_size == 2:
+            return
+
+        self.font_size -= 1
+        self.draw_ascii_art(self.ascii_art_list, self.font_size)
 
 
 if __name__ == '__main__':
