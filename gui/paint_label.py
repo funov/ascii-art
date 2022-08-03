@@ -9,10 +9,12 @@ class PaintLabel(QLabel):
                  ascii_art,
                  width_coef,
                  height_coef,
-                 pixmap_coef):
+                 pixmap_coef,
+                 font_size):
         super(PaintLabel, self).__init__()
         self.width_coef = width_coef
         self.height_coef = height_coef
+        self.font_size = font_size
         self.setPixmap(canvas)
 
         self.pixels = ascii_art
@@ -87,7 +89,7 @@ class PaintLabel(QLabel):
         painter.setPen(pen)
 
         font = QFont()
-        font.setPointSize(10)
+        font.setPointSize(self.font_size)
         font.setFamily('Times')
         font.setStyleHint(QFont.Monospace)
         painter.setFont(font)
