@@ -21,7 +21,7 @@ class UtilsTests(unittest.TestCase):
             '###///###\n///###///'
         ]
         self.expected_folder_info_with_out_folder_not_win = [
-            ('C:/Users/User/folder/image', 'w')
+            ('home/User/folder/image', 'w')
         ]
 
         self.expected_write_data_without_out_folder_win = [
@@ -35,7 +35,7 @@ class UtilsTests(unittest.TestCase):
             '###///###\n///###///'
         ]
         self.expected_folder_info_without_out_folder_not_win = [
-            ('C:/Users/User/image', 'w')
+            ('home/User/image', 'w')
         ]
 
     def test_write_with_out_folder_win(self):
@@ -63,8 +63,8 @@ class UtilsTests(unittest.TestCase):
         with patch('model.utils.open', m):
             write_ascii_art(
                 '###///###\n///###///',
-                'C:/Users/User/image.png',
-                'C:/Users/User/folder'
+                'home/User/image.png',
+                'home/User/folder'
             )
 
             expected_time = str(time()).split('.')[0]
@@ -101,7 +101,7 @@ class UtilsTests(unittest.TestCase):
         with patch('model.utils.open', m):
             write_ascii_art(
                 '###///###\n///###///',
-                'C:/Users/User/image.png',
+                'home/User/image.png',
                 None
             )
 

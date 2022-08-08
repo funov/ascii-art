@@ -55,10 +55,10 @@ class PaintLabel(QLabel):
         column_ind = int(e.x() / self.width_coef)
         row_ind = int(e.y() / self.height_coef)
 
-        is_column_correct = not 0 < column_ind < self.pixels_width + 1
-        is_row_correct = not 0 < row_ind < self.pixels_height + 1
+        is_not_column_correct = not 0 < column_ind < self.pixels_width + 1
+        is_not_row_correct = not 0 < row_ind < self.pixels_height + 1
 
-        if is_column_correct or is_row_correct:
+        if is_not_column_correct or is_not_row_correct:
             return
 
         if self.pixels[row_ind - 1][column_ind - 1] != ' ':

@@ -21,5 +21,5 @@ def make_ascii_art(
             out_path,
             is_console_output
         )
-    except OSError:
+    except (OSError, UnicodeError, MemoryError):
         print('Некорректный файловый путь')
